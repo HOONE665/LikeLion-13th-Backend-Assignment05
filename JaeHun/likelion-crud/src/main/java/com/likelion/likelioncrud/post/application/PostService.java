@@ -8,6 +8,10 @@ import com.likelion.likelioncrud.post.api.dto.response.PostInfoResponseDto;
 import com.likelion.likelioncrud.post.api.dto.response.PostListResponseDto;
 import com.likelion.likelioncrud.post.domain.Post;
 import com.likelion.likelioncrud.post.domain.repository.PostRepository;
+import com.likelion.likelioncrud.posttag.domain.PostTag;
+import com.likelion.likelioncrud.posttag.domain.repository.PostTagRepository;
+import com.likelion.likelioncrud.tag.domain.Tag;
+import com.likelion.likelioncrud.tag.domain.repository.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +24,8 @@ import java.util.List;
 public class PostService {
     private final MemberRepository memberRepository;
     private final PostRepository postRepository;
+    private final TagRepository tagRepository;
+    private final PostTagRepository postTagRepository;
 
     // 게시물 저장
     @Transactional
@@ -33,6 +39,17 @@ public class PostService {
                 .build();
 
         postRepository.save(post);
+
+        for (String tagName : postSaveRequestDto.tags()) {
+            Tag tag = tagRepository.findByName(tagName)
+                    .orElseGet(() -> tagRepository.save(new Tag(tagName)));
+
+
+            PostTag postTag = new PostTag(post, tag);
+            postTagRepository.save(postTag);
+
+        }
+
     }
 
     // 특정 작성자가 작성한 게시글 목록을 조회
