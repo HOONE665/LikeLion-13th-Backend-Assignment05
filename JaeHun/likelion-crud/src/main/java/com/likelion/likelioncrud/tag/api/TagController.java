@@ -34,10 +34,6 @@ public class TagController {
         return tagService.findTag(id);
     }
 
-    @PutMapping("/{id}")
-    public void updateTag(@PathVariable Long id, @RequestBody TagUpdateRequestDto requestDto) {
-        tagService.updateTag(id, requestDto);
-    }
 
     @PatchMapping("/{id}")
     public ResponseEntity<String> update(@PathVariable Long id, @RequestBody TagUpdateRequestDto requestDto) {

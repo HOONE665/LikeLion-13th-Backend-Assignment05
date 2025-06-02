@@ -47,9 +47,14 @@ public class TagService {
 
     @Transactional
     public void deleteTag(Long id) {
-        tagRepository.deleteById(id);
+        Tag tag = tagRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Tag 찾을 수 없음"));
 
+        tagRepository.delete(tag);
     }
 
 
 }
+
+
+
